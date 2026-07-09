@@ -60,38 +60,26 @@
 
     <div id="reasonArea" style="display:none;">
 
-        <h3>そのように判断した理由として最も当てはまるものを1つ選択してください</h3>
+    <h3>そのように判断した理由として、最も当てはまるものを1つ選択してください。</h3>
 
-        <label>
-            <input type="radio" name="reason" value="文体が機械的">
-            文体が機械的
-        </label><br>
+    <div class="reasonList">
 
-        <label>
-            <input type="radio" name="reason" value="語彙が不自然">
-            語彙が不自然
-        </label><br>
+        <label><input type="radio" name="reason" value="文体・表現"> 文体・表現に違和感があった</label>
 
-        <label>
-            <input type="radio" name="reason" value="文法がおかしい">
-            文法がおかしい
-        </label><br>
+        <label><input type="radio" name="reason" value="語彙"> 語彙の選び方に違和感があった</label>
 
-        <label>
-            <input type="radio" name="reason" value="内容が不自然">
-            内容が不自然
-        </label><br>
+        <label><input type="radio" name="reason" value="文法"> 文法や助詞の使い方に違和感があった</label>
 
-        <label>
-            <input type="radio" name="reason" value="なんとなく">
-            なんとなく
-        </label><br><br>
+        <label><input type="radio" name="reason" value="内容"> 内容や論理展開に違和感があった</label>
 
-        <button id="nextButton">
-            次へ
-        </button>
+        <label><input type="radio" name="reason" value="直感"> 全体的な印象（直感）で判断した</label>
+
+        <label><input type="radio" name="reason" value="その他"> その他</label>
 
     </div>
+
+    <button id="nextButton">次へ</button>
+
     <br><br>
 
     <button id="stopButton">
