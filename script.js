@@ -1,0 +1,184 @@
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxqDtK4c7RhHRfQMXqvkVx1vt1afsUZq-YHD51uJir2Wc2JzXAMDljCSmZYgMHlg4WZ/exec";
+let startTime;
+let results = [];
+let questions = [];
+let selectedQuestions = [];
+let currentQuestion = 0;
+
+// index.html
+const startButton = document.getElementById("startButton");
+
+if (startButton) {
+
+    startButton.addEventListener("click", () => {
+
+        // ランダムな8文字のIDを生成
+        const subject = crypto.randomUUID().slice(0, 8);
+
+        localStorage.clear();
+
+        localStorage.setItem("subject", subject);
+
+        location.href = "experiment.html";
+
+    });
+
+}
+
+if (window.location.pathname.includes("experiment.html")) {
+
+    initializeExperiment();
+
+}
+
+async function initializeExperiment() {
+
+    const response = await fetch("questions.json");
+
+    questions = await response.json();
+
+    questions.sort(() => Math.random() - 0.5);
+
+    selectedQuestions = questions.slice(0, 3);
+
+    showQuestion();
+
+}
+
+function showQuestion() {
+
+    const q = selectedQuestions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+        `問題 ${currentQuestion + 1} / 3`;
+
+    document.getElementById("textA").textContent =
+        q.textA;
+
+    document.getElementById("textB").textContent =
+        q.textB;
+
+    startTime = Date.now();
+
+}
+
+document.getElementById("buttonA")
+?.addEventListener("click", () => answerQuestion("A"));
+
+document.getElementById("buttonB")
+?.addEventListener("click", () => answerQuestion("B"));
+
+function answerQuestion(answer){
+
+    const q = selectedQuestions[currentQuestion];
+
+    const responseTime =
+        (Date.now() - startTime) / 1000;
+
+    results.push({
+
+        subject:
+            localStorage.getItem("subject"),
+
+        question:
+            q.id,
+
+        answer:
+            answer,
+
+        correct:
+            q.answer,
+
+        response_time:
+            responseTime
+
+    });
+
+    currentQuestion++;
+
+    if(currentQuestion < 3){
+
+        showQuestion();
+
+    }else{
+
+        localStorage.setItem(
+            "results",
+            JSON.stringify(results)
+        );
+
+        location.href = "finish.html";
+
+    }
+
+}
+
+if(window.location.pathname.includes("finish.html")){
+
+    sendResults();
+
+}
+
+async function sendResults(){
+
+    const data =
+        JSON.parse(
+            localStorage.getItem("results")
+        );
+
+    if(!data) return;
+
+    try{
+
+        for(const row of data){
+
+            await fetch(GAS_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                body: JSON.stringify(row)
+            });
+
+        }
+
+        localStorage.removeItem("results");
+
+        document.getElementById("status").textContent =
+            "送信が完了しました。";
+
+    }
+
+    catch(e){
+
+        document.getElementById("status").textContent =
+            "送信に失敗しました。";
+
+        console.error(e);
+
+    }
+
+}
+
+const stopButton = document.getElementById("stopButton");
+
+if (stopButton) {
+
+    stopButton.addEventListener("click", () => {
+
+        const result = confirm(
+            "実験を中断しますか？\n途中までの回答は保存されません。"
+        );
+
+        if (result) {
+
+            localStorage.clear();
+
+            location.href = "index.html";
+
+        }
+
+    });
+
+}
