@@ -43,7 +43,8 @@
 
     <h3>
 
-        AIが生成した文章はどちらですか？
+        次の2つの文章のうち、AIが生成したと思う文章を選択してください
+
 
     </h3>
 
@@ -57,6 +58,40 @@
         B
     </button>
 
+    <div id="reasonArea" style="display:none;">
+
+        <h3>そのように判断した理由として最も当てはまるものを1つ選択してください</h3>
+
+        <label>
+            <input type="radio" name="reason" value="文体が機械的">
+            文体が機械的
+        </label><br>
+
+        <label>
+            <input type="radio" name="reason" value="語彙が不自然">
+            語彙が不自然
+        </label><br>
+
+        <label>
+            <input type="radio" name="reason" value="文法がおかしい">
+            文法がおかしい
+        </label><br>
+
+        <label>
+            <input type="radio" name="reason" value="内容が不自然">
+            内容が不自然
+        </label><br>
+
+        <label>
+            <input type="radio" name="reason" value="なんとなく">
+            なんとなく
+        </label><br><br>
+
+        <button id="nextButton">
+            次へ
+        </button>
+
+    </div>
     <br><br>
 
     <button id="stopButton">

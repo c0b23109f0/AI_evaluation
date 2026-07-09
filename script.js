@@ -63,12 +63,24 @@ function showQuestion() {
 }
 
 document.getElementById("buttonA")
-?.addEventListener("click", () => answerQuestion("A"));
+.addEventListener("click",()=>{
+
+    selectedAnswer="A";
+
+    showReason();
+
+});
 
 document.getElementById("buttonB")
-?.addEventListener("click", () => answerQuestion("B"));
+.addEventListener("click",()=>{
 
-function answerQuestion(answer){
+    selectedAnswer="B";
+
+    showReason();
+
+});
+
+function answerQuestion(answer, reason){
 
     const q = selectedQuestions[currentQuestion];
 
@@ -88,6 +100,9 @@ function answerQuestion(answer){
 
         correct:
             q.answer,
+
+        reason:
+            reason,
 
         response_time:
             responseTime
@@ -182,3 +197,36 @@ if (stopButton) {
     });
 
 }
+
+function showReason(){
+
+    document.getElementById("buttonA").style.display="none";
+    document.getElementById("buttonB").style.display="none";
+
+    document.getElementById("reasonArea").style.display="block";
+
+}
+
+document
+.getElementById("nextButton")
+.addEventListener("click",()=>{
+
+    const checked =
+    document.querySelector(
+        'input[name="reason"]:checked'
+    );
+
+    if(!checked){
+
+        alert("理由を選択してください");
+
+        return;
+
+    }
+
+    answerQuestion(
+        selectedAnswer,
+        checked.value
+    );
+
+});
