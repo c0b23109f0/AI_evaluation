@@ -59,10 +59,11 @@ function showQuestion(){
 
     document.getElementById("textA").textContent = q.textA;
     document.getElementById("textB").textContent = q.textB;
+    document.getElementById("titleA").textContent = q.titleA || "";
+    document.getElementById("titleB").textContent = q.titleB || "";
 
     startTime = Date.now();
 
-<<<<<<< HEAD
     // A/Bボタンを再表示
     document.getElementById("buttonA").style.display = "inline-block";
     document.getElementById("buttonB").style.display = "inline-block";
@@ -82,6 +83,9 @@ function showQuestion(){
         top: 0,
         behavior: "smooth"
     });
+
+    buttonA.classList.remove("selected");
+    buttonB.classList.remove("selected");   
 }
 
 const buttonA = document.getElementById("buttonA");
@@ -91,6 +95,9 @@ if(buttonA){
     buttonA.addEventListener("click",()=>{
 
         selectedAnswer="A";
+
+        buttonA.classList.add("selected");
+        buttonB.classList.remove("selected");
 
         showReason();
 
@@ -106,47 +113,14 @@ if(buttonB){
 
         selectedAnswer="B";
 
+        buttonB.classList.add("selected");
+        buttonA.classList.remove("selected");
+
         showReason();
 
     });
 
 }
-=======
-    // ===== 追加 =====
-
-    // A/Bを表示
-    document.getElementById("buttonA").style.display = "inline-block";
-    document.getElementById("buttonB").style.display = "inline-block";
-
-    // 理由を隠す
-    document.getElementById("reasonArea").style.display = "none";
-
-    // 理由の選択解除
-    document.querySelectorAll('input[name="reason"]').forEach(r=>{
-        r.checked = false;
-    });
-
-    selectedAnswer = "";
-}
-
-document.getElementById("buttonA")
-.addEventListener("click",()=>{
-
-    selectedAnswer="A";
-
-    showReason();
-
-});
-
-document.getElementById("buttonB")
-.addEventListener("click",()=>{
-
-    selectedAnswer="B";
-
-    showReason();
-
-});
->>>>>>> 7503d75c53c1971f9dc39f7157dbb8003a0a7b4a
 
 function answerQuestion(answer, reason){
 
@@ -177,11 +151,7 @@ function answerQuestion(answer, reason){
             q.answer,
 
         reason:
-<<<<<<< HEAD
             reasonText,
-=======
-            reason,
->>>>>>> 7503d75c53c1971f9dc39f7157dbb8003a0a7b4a
 
         response_time:
             responseTime
@@ -304,12 +274,8 @@ if (stopButton) {
 
 function showReason(){
 
-    document.getElementById("buttonA").style.display="none";
-    document.getElementById("buttonB").style.display="none";
-
     document.getElementById("reasonArea").style.display="block";
 
-<<<<<<< HEAD
     document.getElementById("reasonArea").scrollIntoView({
         behavior: "smooth",
         block: "center"
@@ -346,31 +312,4 @@ if(nextButton){
 
     });
 
-}
-=======
-}
-
-document
-.getElementById("nextButton")
-.addEventListener("click",()=>{
-
-    const checked =
-    document.querySelector(
-        'input[name="reason"]:checked'
-    );
-
-    if(!checked){
-
-        alert("理由を選択してください");
-
-        return;
-
-    }
-
-    answerQuestion(
-        selectedAnswer,
-        checked.value
-    );
-
-});
->>>>>>> 7503d75c53c1971f9dc39f7157dbb8003a0a7b4a
+}   
