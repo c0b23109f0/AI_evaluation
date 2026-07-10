@@ -50,21 +50,19 @@ async function initializeExperiment() {
 
 }
 
-function showQuestion() {
+function showQuestion(){
 
     const q = selectedQuestions[currentQuestion];
 
     document.getElementById("questionNumber").textContent =
-        `問題 ${currentQuestion + 1} / 3`;
+        `問題 ${currentQuestion+1} / 3`;
 
-    document.getElementById("textA").textContent =
-        q.textA;
-
-    document.getElementById("textB").textContent =
-        q.textB;
+    document.getElementById("textA").textContent = q.textA;
+    document.getElementById("textB").textContent = q.textB;
 
     startTime = Date.now();
 
+<<<<<<< HEAD
     // A/Bボタンを再表示
     document.getElementById("buttonA").style.display = "inline-block";
     document.getElementById("buttonB").style.display = "inline-block";
@@ -113,6 +111,42 @@ if(buttonB){
     });
 
 }
+=======
+    // ===== 追加 =====
+
+    // A/Bを表示
+    document.getElementById("buttonA").style.display = "inline-block";
+    document.getElementById("buttonB").style.display = "inline-block";
+
+    // 理由を隠す
+    document.getElementById("reasonArea").style.display = "none";
+
+    // 理由の選択解除
+    document.querySelectorAll('input[name="reason"]').forEach(r=>{
+        r.checked = false;
+    });
+
+    selectedAnswer = "";
+}
+
+document.getElementById("buttonA")
+.addEventListener("click",()=>{
+
+    selectedAnswer="A";
+
+    showReason();
+
+});
+
+document.getElementById("buttonB")
+.addEventListener("click",()=>{
+
+    selectedAnswer="B";
+
+    showReason();
+
+});
+>>>>>>> 7503d75c53c1971f9dc39f7157dbb8003a0a7b4a
 
 function answerQuestion(answer, reason){
 
@@ -143,7 +177,11 @@ function answerQuestion(answer, reason){
             q.answer,
 
         reason:
+<<<<<<< HEAD
             reasonText,
+=======
+            reason,
+>>>>>>> 7503d75c53c1971f9dc39f7157dbb8003a0a7b4a
 
         response_time:
             responseTime
@@ -183,7 +221,23 @@ async function sendResults(){
             localStorage.getItem("results")
         );
 
-    if(!data) return;
+    const returnButton = document.getElementById("returnButton");
+
+    if (returnButton) {
+        returnButton.disabled = true;
+        returnButton.textContent = "送信中...";
+    }
+
+    if(!data) {
+        if (returnButton) {
+            returnButton.disabled = false;
+            returnButton.textContent = "スタート画面へ戻る";
+            returnButton.addEventListener("click", () => {
+                location.href = "index.html";
+            });
+        }
+        return;
+    }
 
     try{
 
@@ -214,6 +268,14 @@ async function sendResults(){
 
         console.error(e);
 
+    }
+
+    if (returnButton) {
+        returnButton.disabled = false;
+        returnButton.textContent = "スタート画面へ戻る";
+        returnButton.addEventListener("click", () => {
+            location.href = "index.html";
+        });
     }
 
 }
@@ -247,6 +309,7 @@ function showReason(){
 
     document.getElementById("reasonArea").style.display="block";
 
+<<<<<<< HEAD
     document.getElementById("reasonArea").scrollIntoView({
         behavior: "smooth",
         block: "center"
@@ -284,3 +347,30 @@ if(nextButton){
     });
 
 }
+=======
+}
+
+document
+.getElementById("nextButton")
+.addEventListener("click",()=>{
+
+    const checked =
+    document.querySelector(
+        'input[name="reason"]:checked'
+    );
+
+    if(!checked){
+
+        alert("理由を選択してください");
+
+        return;
+
+    }
+
+    answerQuestion(
+        selectedAnswer,
+        checked.value
+    );
+
+});
+>>>>>>> 7503d75c53c1971f9dc39f7157dbb8003a0a7b4a
