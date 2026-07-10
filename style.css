@@ -86,3 +86,29 @@ button{
 
     font-size:16px;
 }
+
+.reasonList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 800px;       /* お好みで調整 */
+    margin: 20px auto;
+}
+
+.reasonList label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;          /* チェックボックスと文字の間隔 */
+    margin: 8px 0;
+    width: 100%;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.reasonList input[type="checkbox"] {
+    margin-top: 3px;    /* 文字の1行目と高さを合わせる */
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    accent-color: #333;
+}

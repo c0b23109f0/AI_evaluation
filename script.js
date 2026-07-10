@@ -1,9 +1,12 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxqDtK4c7RhHRfQMXqvkVx1vt1afsUZq-YHD51uJir2Wc2JzXAMDljCSmZYgMHlg4WZ/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzNXMk5kQMij4V9Vzm7Kf8G8obaY8iPENOVCVpNFEavfEIIgyocCw-MHq0-MXoRsAc/exec";
 let startTime;
 let results = [];
 let questions = [];
 let selectedQuestions = [];
 let currentQuestion = 0;
+let selectedAnswer = "";
+let selectedReason = "";
+let patternId = 0;
 
 // index.html
 const startButton = document.getElementById("startButton");
@@ -30,16 +33,18 @@ if (window.location.pathname.includes("experiment.html")) {
     initializeExperiment();
 
 }
-
 async function initializeExperiment() {
 
     const response = await fetch("questions.json");
 
-    questions = await response.json();
+    const patterns = await response.json();
 
-    questions.sort(() => Math.random() - 0.5);
+    // パターンをランダムに1つ選ぶ
+    const randomIndex = Math.floor(Math.random() * patterns.length);
 
-    selectedQuestions = questions.slice(0, 3);
+    patternId = randomIndex + 1;
+
+    selectedQuestions = patterns[randomIndex];
 
     showQuestion();
 
@@ -60,26 +65,74 @@ function showQuestion() {
 
     startTime = Date.now();
 
+    // A/Bボタンを再表示
+    document.getElementById("buttonA").style.display = "inline-block";
+    document.getElementById("buttonB").style.display = "inline-block";
+
+    // 理由選択画面を隠す
+    document.getElementById("reasonArea").style.display = "none";
+
+    // 理由の選択を解除
+    document
+    .querySelectorAll('input[name="reason"]')
+    .forEach(r => r.checked = false);
+
+    selectedAnswer = "";
+    selectedReason = "";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
-document.getElementById("buttonA")
-?.addEventListener("click", () => answerQuestion("A"));
+const buttonA = document.getElementById("buttonA");
 
-document.getElementById("buttonB")
-?.addEventListener("click", () => answerQuestion("B"));
+if(buttonA){
 
-function answerQuestion(answer){
+    buttonA.addEventListener("click",()=>{
+
+        selectedAnswer="A";
+
+        showReason();
+
+    });
+
+}
+
+const buttonB = document.getElementById("buttonB");
+
+if(buttonB){
+
+    buttonB.addEventListener("click",()=>{
+
+        selectedAnswer="B";
+
+        showReason();
+
+    });
+
+}
+
+function answerQuestion(answer, reason){
 
     const q = selectedQuestions[currentQuestion];
 
     const responseTime =
         (Date.now() - startTime) / 1000;
 
+    const reasonText = Array.isArray(reason)
+        ? reason.join('; ')
+        : reason;
+
     results.push({
 
         subject:
             localStorage.getItem("subject"),
 
+        pattern:
+            patternId,
+        
         question:
             q.id,
 
@@ -88,6 +141,9 @@ function answerQuestion(answer){
 
         correct:
             q.answer,
+
+        reason:
+            reasonText,
 
         response_time:
             responseTime
@@ -102,6 +158,7 @@ function answerQuestion(answer){
 
     }else{
 
+        console.log(results);
         localStorage.setItem(
             "results",
             JSON.stringify(results)
@@ -178,6 +235,51 @@ if (stopButton) {
             location.href = "index.html";
 
         }
+
+    });
+
+}
+
+function showReason(){
+
+    document.getElementById("buttonA").style.display="none";
+    document.getElementById("buttonB").style.display="none";
+
+    document.getElementById("reasonArea").style.display="block";
+
+    document.getElementById("reasonArea").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+const nextButton = document.getElementById("nextButton");
+
+if(nextButton){
+
+    nextButton.addEventListener("click",()=>{
+
+        const checkedNodes = Array.from(
+            document.querySelectorAll('input[name="reason"]:checked')
+        );
+
+        if(checkedNodes.length === 0){
+
+            alert("理由を少なくとも1つ選択してください");
+
+            return;
+
+        }
+
+        const reasons = checkedNodes.map(n => n.value);
+        const reasonStr = reasons.join('; ');
+        selectedReason = reasonStr;
+        console.log("selectedReason:", reasonStr);
+        answerQuestion(
+            selectedAnswer,
+            reasons
+        );
 
     });
 
