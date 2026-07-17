@@ -184,34 +184,117 @@ if(window.location.pathname.includes("finish.html")){
 
 }
 
-async function sendResults(){
+async function sendResults() {
 
-    const data =
-        JSON.parse(
-            localStorage.getItem("results")
-        );
+    const data = JSON.parse(localStorage.getItem("results"));
 
+    const status = document.getElementById("status");
+    const resultArea = document.getElementById("resultArea");
     const returnButton = document.getElementById("returnButton");
+
+    if (!data) {
+
+        status.textContent = "回答データがありません。";
+
+        if (returnButton) {
+            returnButton.disabled = false;
+            returnButton.textContent = "スタート画面へ戻る";
+            returnButton.onclick = () => {
+                location.href = "index.html";
+            };
+        }
+
+        return;
+    }
+
+    //=========================
+    // 先に結果を表示
+    //=========================
+
+    let html = `
+    <h2>実験結果</h2>
+
+    <div class="resultCards">
+    `;
+
+    let correctCount = 0;
+
+    data.forEach((r, i) => {
+
+        const correct = r.answer === r.correct;
+
+        if (correct) correctCount++;
+
+        html += `
+        <div class="resultCard">
+
+            <h3>問題${i + 1}</h3>
+
+            <p><strong>あなたの回答：</strong>文章${r.answer}</p>
+
+            <p><strong>正解：</strong>文章${r.correct}</p>
+
+            <div class="${correct ? "correct" : "incorrect"}">
+                ${correct ? "🟢 正解" : "🔴 不正解"}
+            </div>
+
+        </div>
+        `;
+    });
+
+    // ★ resultCardsを閉じる
+    html += `
+    </div>`;
+
+    if (correctCount == 0) {
+        html += `
+        <div class="score">
+        ${correctCount} / ${data.length} 門正解でした<br>
+        🤖 今回は全問難問でした!
+        </div>
+        `;
+    } else {
+
+        html += `
+        <div class="score">
+        🎉 ${correctCount} / ${data.length} 問正解！
+        </div>
+        `;
+    }
+
+    html += `
+    <p class="message">
+    生成AIは近年急速に進化しており、人間でも判別が難しくなっています。<br>
+    ご協力ありがとうございました。
+    </p>
+    `;
+
+    resultArea.innerHTML = html;
+
+    //=========================
+    // 表示を優先
+    //=========================
+
+    status.textContent = "📤 回答を送信しています...";
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    //=========================
+    // ボタン無効化
+    //=========================
 
     if (returnButton) {
         returnButton.disabled = true;
         returnButton.textContent = "送信中...";
     }
 
-    if(!data) {
-        if (returnButton) {
-            returnButton.disabled = false;
-            returnButton.textContent = "スタート画面へ戻る";
-            returnButton.addEventListener("click", () => {
-                location.href = "index.html";
-            });
-        }
-        return;
-    }
+    //=========================
+    // GAS送信
+    //=========================
 
-    try{
+    try {
 
-        for(const row of data){
+        for (const row of data) {
 
             await fetch(GAS_URL, {
                 method: "POST",
@@ -226,26 +309,33 @@ async function sendResults(){
 
         localStorage.removeItem("results");
 
-        document.getElementById("status").textContent =
-            "送信が完了しました。";
+        status.textContent = "✅ 回答の送信が完了しました。";
 
     }
+    catch (e) {
 
-    catch(e){
-
-        document.getElementById("status").textContent =
-            "送信に失敗しました。";
+        status.textContent = "⚠️ 回答の送信に失敗しました。";
 
         console.error(e);
 
     }
 
+    //=========================
+    // 戻るボタン
+    //=========================
+
     if (returnButton) {
+
         returnButton.disabled = false;
+
         returnButton.textContent = "スタート画面へ戻る";
-        returnButton.addEventListener("click", () => {
+
+        returnButton.onclick = () => {
+
             location.href = "index.html";
-        });
+
+        };
+
     }
 
 }

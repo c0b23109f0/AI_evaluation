@@ -192,3 +192,104 @@ button:disabled{
     background:#28a745 !important;
     color:white;
 }
+
+#resultArea{
+
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    margin-top:40px;
+
+}
+
+.resultCard{
+
+    width:240px;
+
+    min-height:260px;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    background:white;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.12);
+
+    text-align:center;
+
+}
+
+.resultCard h3{
+
+    margin-top:0;
+
+    margin-bottom:15px;
+
+    color:#1976d2;
+
+}
+
+.resultCard p{
+
+    margin:8px 0;
+
+    font-size:18px;
+
+}
+
+.correct,
+.incorrect{
+
+    margin-top:25px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    color:white;
+
+}
+
+.correct{
+
+    background:#4CAF50;
+
+}
+
+.incorrect{
+
+    background:#F44336;
+
+}
+
+.score{
+
+    margin-top:35px;
+
+    font-size:40px;
+
+    font-weight:bold;
+
+    color:#1976d2;
+
+}
+
+.resultCards{
+
+    display:flex;
+
+    flex-direction:row;
+
+    justify-content:center;
+
+    gap:30px;
+
+}
