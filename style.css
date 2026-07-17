@@ -293,3 +293,19 @@ button:disabled{
     gap:30px;
 
 }
+
+.experimentContainer{
+    width:1600px;
+    max-width:95vw;
+}
+
+.textArea{
+    display:flex;
+    gap:40px;
+    width:100%;
+}
+
+.textBox{
+    flex:1;
+    min-width:0;
+}
